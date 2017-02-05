@@ -59,10 +59,11 @@ $scope.select = function(setTab) {
             };
         }])
 
-        .controller('dishDetailController', ['$scope', 'menuFactory', function($scope, menuFactory) {
+        .controller('dishDetailController', ['$scope', '$routeParams', 'menuFactory', function($scope, $routeParams, menuFactory) {
 
-            $scope.dish= menuFactory.getDish(3);            
-        }])
+            var dish= menuFactory.getDish(parseInt($routeParams.id,10));                        
+            $scope.dish = dish;
+                    }])
 
 
         .controller('DishCommentController', ['$scope', function($scope) {
