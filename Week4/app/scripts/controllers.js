@@ -79,20 +79,17 @@ angular.module('confusionApp')
         }])
 
         .controller('DishCommentController', ['$scope', function($scope) {
+            $scope.today = new Date();
+            $scope.rating = {author:"", rating: 5, comment:"", date: $scope.today};
             
-            $scope.mycomment = {rating:5, comment:"", author:"", date:""};
-            
-            $scope.submitComment = function () {
+            $scope.sendRating = function () {           
+                $scope.dish.comments.push($scope.rating);
                 
-                $scope.mycomment.date = new Date().toISOString();
-                console.log($scope.mycomment);
+                $scope.ratingForm.$setPristine();
                 
-                $scope.dish.comments.push($scope.mycomment);
-                
-                $scope.commentForm.$setPristine();
-                
-                $scope.mycomment = {rating:5, comment:"", author:"", date:""};
+                $scope.rating = {rating:5, comment:"", author:"", date: $scope.today};
             }
+            console.log("hello");
         }])
 
         .controller('IndexController', ['$scope','menuFactory','corporateFactory',function($scope, menuFactory, corporateFactory) {
