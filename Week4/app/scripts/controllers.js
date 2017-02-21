@@ -8,9 +8,16 @@ angular.module('confusionApp')
             $scope.filtText = '';
             $scope.showDetails = false;
 
-            $scope.showMenu = true;
+            $scope.showMenu = false;
             $scope.message = "Loading ...";
-                        $scope.dishes = menuFactory.getDishes().query();
+                        $scope.dishes = menuFactory.getDishes().query(
+                function(response) {
+                    $scope.dishes = response;
+                    $scope.showMenu = true;
+                },
+                function(response) {
+                    $scope.message = "Error: "+response.status + " " + response.statusText;
+                });
 
                         
             $scope.select = function(setTab) {
@@ -72,19 +79,27 @@ angular.module('confusionApp')
 
         .controller('DishDetailController', ['$scope', '$stateParams', 'menuFactory', function($scope, $stateParams, menuFactory) {
 
-            $scope.showDish = true;
+            $scope.showDish = false;
             $scope.message="Loading ...";
-                        $scope.dish = menuFactory.getDishes().get({id:parseInt($stateParams.id,10)});
+                        $scope.dish = menuFactory.getDishes().get({id:parseInt($stateParams.id,10)})            .$promise.then(
+                            function(response){
+                                $scope.dish = response;
+                                $scope.showDish = true;
+                            },
+                            function(response) {
+                                $scope.message = "Error: "+response.status + " " + response.statusText;
+                            }
+            );
             
         }])
 
-        .controller('DishCommentController', ['$scope', function($scope) {
+        .controller('DishCommentController', ['$scope', 'menuFactory', function($scope,menuFactory) {
             $scope.today = new Date();
             $scope.rating = {author:"", rating: 5, comment:"", date: $scope.today};
             
             $scope.sendRating = function () {           
-                $scope.dish.comments.push($scope.rating);
-                
+               console.log($scope.rating); $scope.dish.comments.push($scope.rating);
+                menuFactory.getDishes().update({id:$scope.dish.id},$scope.dish);
                 $scope.ratingForm.$setPristine();
                 
                 $scope.rating = {rating:5, comment:"", author:"", date: $scope.today};
@@ -95,9 +110,17 @@ angular.module('confusionApp')
         .controller('IndexController', ['$scope','menuFactory','corporateFactory',function($scope, menuFactory, corporateFactory) {
             
             //code from excercise guide -- we use 'featured' to denote featured dish instead of 'dish'
-            $scope.showDish = true;
+            $scope.showDish = false;
             $scope.message="Loading ...";
-            $scope.featured = menuFactory.getDishes().get({id:0});
+            $scope.featured = menuFactory.getDishes().get({id:0})                        .$promise.then(
+                            function(response){
+                                $scope.featured = response;
+                                $scope.showDish = true;
+                            },
+                            function(response) {
+                                $scope.message = "Error: "+response.status + " " + response.statusText;
+                            }
+                        );;
             //code from excercise guide^
             
             $scope.promotions = menuFactory.getPromotion(0);
