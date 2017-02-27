@@ -48,7 +48,7 @@ angular.module('confusionApp')
 
         .controller('ContactController', ['$scope', function($scope) {
 
-            $scope.feedback = {mychannel:"", firstName:"", lastName:"", agree:false, email:"" };
+            $scope.feedback = {id:0, mychannel:"", firstName:"", lastName:"", agree:false, email:""};
             
             var channels = [{value:"tel", label:"Tel."}, {value:"Email",label:"Email"}];
             
@@ -57,7 +57,7 @@ angular.module('confusionApp')
                         
         }])
 
-        .controller('FeedbackController', ['$scope', function($scope) {
+        .controller('FeedbackController', ['$scope', 'feedbackFactory', function($scope,feedbackFactory) {
             
             $scope.sendFeedback = function() {
                 
@@ -68,8 +68,9 @@ angular.module('confusionApp')
                     console.log('incorrect');
                 }
                 else {
-                    $scope.invalidChannelSelection = false;
-                    $scope.feedback = {mychannel:"", firstName:"", lastName:"", agree:false, email:"" };
+                    $scope.invalidChannelSelection = false;     
+                    feedbackFactory.saveFeedback().create($scope.feedback);
+                    $scope.feedback = {id:0, mychannel:"", firstNames:"", lastName:"", agree:false, email:""};
                     $scope.feedback.mychannel="";
                     $scope.feedbackForm.$setPristine();
                     console.log($scope.feedback);
@@ -122,13 +123,37 @@ angular.module('confusionApp')
                             }
                         );;
             //code from excercise guide^
-            
-            $scope.promotions = menuFactory.getPromotion(0);
-            $scope.specialist = corporateFactory.getLeader("EC");
+             menuFactory.getPromotion().get({id:0})                        .$promise.then(
+                            function(response){
+                                $scope.showpromotion=true;
+                                $scope.promotions = response;
+                            },
+                            function(response) {
+                               $scope.showpromotion=false; $scope.nopromotionsmessage = "Error: "+response.status + " " + response.statusText;
+                            }
+                        ); 
+            corporateFactory.getLeaders().get({id:0})
+            .$promise.then(
+                            function(response){
+                                $scope.showleaders=true;
+                                $scope.specialist = response;
+                            },
+                            function(response) {
+                               $scope.showleader=false; $scope.noleadermessage = "Error: "+response.status + " " + response.statusText;
+                            }
+                        );
         }])// implement the IndexController and About Controller here
 
-        .controller('AboutController',['$scope','corporateFactory',function($scope,corporateFactory){
-            $scope.leadership = corporateFactory.getLeaders();
+        .controller('AboutController',['$scope','corporateFactory',function($scope,corporateFactory){ 
+            $scope.showleaders = false;
+            corporateFactory.getLeaders().query(
+                function(response) {
+                    $scope.leadership = response;
+                    $scope.showleaders = true;
+                },
+                function(response) {
+                    $scope.noleadermessage = "Error: "+response.status + " " + response.statusText;
+                });
         }])
 
 ;

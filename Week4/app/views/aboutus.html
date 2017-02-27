@@ -56,7 +56,8 @@
                 <h2>Corporate Leadership</h2>
                <ul class="media-list">
 <ul class="media-list">
-  <li class="media" ng-repeat="x in leadership">
+    <li ng-if="!showleaders">{{noleadermessage}}</li>
+  <li class="media" ng-repeat="x in leadership" ng-if="showleaders">
     <div class="media-left">
       <a href="#">
         <img class="media-object" src={{x.image}} alt="...">
