@@ -1,8 +1,6 @@
 # Assignments for the course **[Front-End JavaScript Frameworks: AngularJS](https://www.coursera.org/learn/angular)**
 These are assignments for the 4 weeks of Coursera course 'Front-End JavaScript Frameworks: AngularJS by The Hong Kong University of Science and Technology on Coursera. 
 
-[Certificate](https://www.coursera.org/account/accomplishments/certificate/XWQ9QQLBKGTX) earned at Monday, March 13, 2017 8:54 AM GMT
-
 ## Prerequisites:
 Must have either completed the previous course in the specialization on Bootstrap 4, or have a working knowledge of front end web-UI frameworks to be able to navigate this course. Also a good working knowledge of JavaScript, especially ES 5 is strongly recommended.
 
